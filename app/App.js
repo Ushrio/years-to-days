@@ -1,15 +1,16 @@
-import React from 'react'
+import React from 'react';
 
 class App extends React.Component {
     constructor(props) {
         super(props);
-        
+
         this.state = {
-            userMonth: "",
+            userMonth: '',
             userDay: 0,
             userYear: 0,
-            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            daysPerMonth: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+            thirtyOneDayMonths: ['January', 'March', 'May', 'July', 'August', 'October', 'December'],
+            thirtyDayMonths: ['April', 'June', 'September', 'November'],
+            months: [],
             daysPerYear: 365,
         };
 
@@ -22,43 +23,72 @@ class App extends React.Component {
 
     }
 
-    grabYearsDiff() {
-
-    }
-
-    grabDaysIntoYear() {
-
+    getMonthsInfo() {
+        f
     }
 
     getUserMonth(event) {
-        this.setState({userMonth : event.target.value})
-    }
-    
-    getUserDay(event) {
-        if (this.userMonth == "February" && event.target.value > 28) {
-            console.log("Not a valid value for the month")
-        } else if (this.userMonth == "January" || this.userMonth == "March" || this.userMonth =="May" ||this.userMonth == "July" ||this.userMonth == "August" ||this.userMonth == "October" 
-            || this.userMonth == "December" && event.target.value > 31) {
-            console.log("Not a valid value for the month")
-        } else if (this.userMonth == "April" ||this.userMonth == "June" ||this.userMonth == "September" ||this.userMonth == "November" && event.target.value > 30) {
-            console.log("Not a valid value for the month")
+        const { months } = this.state;
+        
+        if (this.months.find(element => (element !== event.target.value))) {
+            console.log('Not a valid month assignment')
         } else {
-            this.setState({userDay : event.target.value})
+            this.setState({ userMonth: event.target.value });
+        }
+    }
+
+    getUserDay(event) {
+        const { userMonth } = this.state;
+        const { thirtyOneDayMonths } = this.state;
+        const { thirtyDayMonths } = this.state;
+
+        if (this.userMonth === 'February') {
+            if (event.target.value > 28) {
+                console.log('Not a valid value for the month');
+            } else {
+                this.setState({ userDay: event.target.value });
+            }
+        } else if (thirtyOneDayMonths.find(element => (element === userMonth))) {
+            if (event.target.value > 31) {
+                console.log('Not a valid value for the month');
+            } else {
+                this.setState({ userDay: event.target.value });
+            }
+        } else if (thirtyDayMonths.find(element => (element === userMonth))) {
+            if (event.target.value > 30) {
+                console.log('Not a valid value for the month');
+            } else {
+                this.setState({ userDay: event.target.value });
+            }
+        } else {
+            this.setState({ userDay: event.target.value });
         }
     }
 
     getUserYear(event) {
-        this.setState({userYear : event.target.value})
+        this.setState({ userYear: event.target.value });
+    }
+
+    grabYearsDiff() {
+
+    }
+
+    grabDaysIntoYear(event) {
+        this.setState({ userYear: event.target.value });
     }
 
     render() {
         return (
             <div>
-                <input id="Month" value={this.state.userMonth} onChange={this.getUserMonth}></input>
-                <input id="Day" value={this.state.userDay} onChange={this.getUserDay}></input>
-                <input id="Year" value={this.state.userYear} onChange={this.getUserYear}></input>
+                <select id="Month" value={this.state.userMonth} onChange={this.getUserMonth}>
+                    {this.state.months.map((month) => {
+                        <option key={month} value={month}>{month}</option>
+                    })}
+                </select>
+                <input id="Day" value={this.state.userDay} onChange={this.getUserDay} />
+                <input id="Year" value={this.state.userYear} onChange={this.getUserYear} />
             </div>
-        )        
+        );
     }
 }
 
