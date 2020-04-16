@@ -1,4 +1,5 @@
 import React from 'react';
+import MonthData from '../months'
 
 class App extends React.Component {
     constructor(props) {
@@ -10,7 +11,6 @@ class App extends React.Component {
             userYear: 0,
             thirtyOneDayMonths: ['January', 'March', 'May', 'July', 'August', 'October', 'December'],
             thirtyDayMonths: ['April', 'June', 'September', 'November'],
-            months: [],
             daysPerYear: 365,
         };
 
@@ -19,28 +19,24 @@ class App extends React.Component {
         this.getUserYear = this.getUserYear.bind(this);
     }
 
+    componentDidMount() {
+        const elem = document.getElementById('Month')
+        const event = new Event('onChange', { bubbles: true })
+        elem.dispatchEvent(event)
+    }
+
     getLeapYears() {
 
     }
 
-    getMonthsInfo() {
-        f
-    }
-
     getUserMonth(event) {
-        const { months } = this.state;
-        
-        if (this.months.find(element => (element !== event.target.value))) {
-            console.log('Not a valid month assignment')
-        } else {
-            this.setState({ userMonth: event.target.value });
-        }
+        this.setState({ userMonth: event.target.value })
     }
 
     getUserDay(event) {
-        const { userMonth } = this.state;
-        const { thirtyOneDayMonths } = this.state;
-        const { thirtyDayMonths } = this.state;
+        const { userMonth } = this.state
+        const { thirtyOneDayMonths } = this.state
+        const { thirtyDayMonths } = this.state
 
         if (this.userMonth === 'February') {
             if (event.target.value > 28) {
@@ -48,20 +44,20 @@ class App extends React.Component {
             } else {
                 this.setState({ userDay: event.target.value });
             }
-        } else if (thirtyOneDayMonths.find(element => (element === userMonth))) {
+        } else if (thirtyOneDayMonths.find((element) => (element === userMonth))) {
             if (event.target.value > 31) {
                 console.log('Not a valid value for the month');
             } else {
                 this.setState({ userDay: event.target.value });
             }
-        } else if (thirtyDayMonths.find(element => (element === userMonth))) {
+        } else if (thirtyDayMonths.find((element) => (element === userMonth))) {
             if (event.target.value > 30) {
                 console.log('Not a valid value for the month');
             } else {
                 this.setState({ userDay: event.target.value });
             }
         } else {
-            this.setState({ userDay: event.target.value });
+            this.setState({ userDay: event.target.value })
         }
     }
 
@@ -78,15 +74,16 @@ class App extends React.Component {
     }
 
     render() {
+        const { userDay } = this.state
+        const { userYear } = this.state
+
         return (
             <div>
-                <select id="Month" value={this.state.userMonth} onChange={this.getUserMonth}>
-                    {this.state.months.map((month) => {
-                        <option key={month} value={month}>{month}</option>
-                    })}
+                <select id="Month" onChange={this.getUserMonth}>
+                    {MonthData.map((month) => (<option value={month.name} key={month.name}>{month.name}</option>))}
                 </select>
-                <input id="Day" value={this.state.userDay} onChange={this.getUserDay} />
-                <input id="Year" value={this.state.userYear} onChange={this.getUserYear} />
+                <input id="Day" value={userDay} onChange={this.getUserDay} />
+                <input id="Year" value={userYear} onChange={this.getUserYear} />
             </div>
         );
     }
