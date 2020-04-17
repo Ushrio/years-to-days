@@ -19,7 +19,8 @@
   "license": "ISC",
   "dependencies": {
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "shards-react": "^1.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
