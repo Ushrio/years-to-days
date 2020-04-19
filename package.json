@@ -10,13 +10,13 @@
     ]
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "create": "webpack",
     "start": "webpack-dev-server --open"
   },
   "keywords": [],
   "author": "Greg Heiman",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -35,6 +35,7 @@
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^2.5.0",
     "html-webpack-plugin": "^4.2.0",
+    "jest": "^25.3.0",
     "style-loader": "^1.1.3",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",

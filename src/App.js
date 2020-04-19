@@ -1,8 +1,7 @@
 import React from 'react';
-import MonthData from './months'
-import { FormSelect, FormInput } from 'shards-react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'shards-ui/dist/css/shards.min.css'
+import { FormSelect, FormInput, Alert } from 'shards-react'
 
 class App extends React.Component {
     constructor(props) {
@@ -16,6 +15,8 @@ class App extends React.Component {
             thirtyDayMonths: ['April', 'June', 'September', 'November'],
             daysPerYear: 365,
             currentYear: 2020,
+            daysAlertVisible: false,
+            yearAlertVisible: false,
         };
 
         this.getUserMonth = this.getUserMonth.bind(this);
@@ -27,7 +28,6 @@ class App extends React.Component {
 
     componentDidMount() {
         const elem = document.getElementById('Month')
-        
         // Sets the userMonth immediately after rendering
         if (elem) {
             const event = new Event('change', { bubbles: true })
@@ -70,21 +70,24 @@ class App extends React.Component {
 
         if (this.userMonth === 'February') {
             if (event.target.value > 28) {
-                console.log('Not a valid value for the month');
+                this.setState({ daysAlertVisible: true })
             } else {
                 this.setState({ userDay: event.target.value });
+                this.setState({ daysAlertVisible: false })
             }
         } else if (thirtyOneDayMonths.find((element) => (element === userMonth))) {
             if (event.target.value > 31) {
-                console.log('Not a valid value for the month');
+                this.setState({ daysAlertVisible: true })
             } else {
                 this.setState({ userDay: event.target.value });
+                this.setState({ daysAlertVisible: false })
             }
         } else if (thirtyDayMonths.find((element) => (element === userMonth))) {
             if (event.target.value > 30) {
-                console.log('Not a valid value for the month');
+                this.setState({ daysAlertVisible: true })
             } else {
                 this.setState({ userDay: event.target.value });
+                this.setState({ daysAlertVisible: false })
             }
         } else {
             this.setState({ userDay: event.target.value })
@@ -94,8 +97,9 @@ class App extends React.Component {
     getUserYear(event) {
         if (event.target.value.length < 5) {
             this.setState({ userYear: event.target.value });
+            this.setState({ yearAlertVisible: false })
         } else {
-            console.log('You cannot enter a year that has more than 5 digits')
+            this.setState({ yearAlertVisible: true })
         }
     }
 
@@ -132,17 +136,52 @@ class App extends React.Component {
 
         return (
             <div>
-                <div style={{ "width": "33%" }}>
-                    <FormSelect id="Month" onChange={this.getUserMonth}>
-                        {MonthData.map((month) => (<option value={month.name} key={month.name}>{month.name}</option>))}
-                    </FormSelect>
-                </div>
-                <div style={{ "width": "33%" }}>
-                    <FormInput id="Day" value={userDay} onChange={this.getUserDay} />
-                </div>
-                <div style={{ "width": "33%" }}>
-                    <FormInput id="Year" value={userYear} onChange={this.getUserYear} />
-                </div>
+                <table style={{ "width": "100%" }}>
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Day</th>
+                            <th>Year</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style={{ "width": "33%" }}>
+                                <FormSelect id="Month" onChange={this.getUserMonth}>
+                                    <option>January</option>
+                                    <option>February</option>
+                                    <option>March</option>
+                                    <option>April</option>
+                                    <option>May</option>
+                                    <option>June</option>
+                                    <option>July</option>
+                                    <option>August</option>
+                                    <option>September</option>
+                                    <option>October</option>
+                                    <option>November</option>
+                                    <option>December</option>
+                                </FormSelect>
+                            </td>
+
+                            <td style={{ "width": "33%" }}>
+                                <FormInput id="Day" value={userDay} onChange={this.getUserDay} />
+                            </td>
+
+                            <td style={{ "width": "33%" }}>
+                                <FormInput id="Year" value={userYear} onChange={this.getUserYear} />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td />
+                            <td>
+                                <Alert theme="danger" open={this.state.daysAlertVisible}>Please choose a valid day for the month</Alert>
+                            </td>
+                            <td>
+                                <Alert theme="danger" open={this.state.yearAlertVisible}>Please enter in a valid year</Alert>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         );
     }
