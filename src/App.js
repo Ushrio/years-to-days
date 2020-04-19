@@ -6,7 +6,8 @@ import { FormSelect, FormInput, Alert } from 'shards-react'
 class App extends React.Component {
     constructor(props) {
         super(props);
-
+        // Initialize today as a constant date
+        const today = new Date();
         this.state = {
             userMonth: '',
             userDay: 0,
@@ -14,7 +15,7 @@ class App extends React.Component {
             thirtyOneDayMonths: ['January', 'March', 'May', 'July', 'August', 'October', 'December'],
             thirtyDayMonths: ['April', 'June', 'September', 'November'],
             daysPerYear: 365,
-            currentYear: 2020,
+            currentYear: today.getFullYear(),
             daysAlertVisible: false,
             yearAlertVisible: false,
         };
@@ -24,6 +25,8 @@ class App extends React.Component {
         this.getUserYear = this.getUserYear.bind(this);
         this.getLeapYears = this.getLeapYears.bind(this);
         this.grabYearsDiff = this.grabYearsDiff.bind(this);
+        this.grabDaysIntoBirthYear = this.grabDaysIntoBirthYear.bind(this);
+        this.grabDaysIntoCurrentYear = this.grabDaysIntoCurrentYear.bind(this);
     }
 
     componentDidMount() {
@@ -103,14 +106,6 @@ class App extends React.Component {
         }
     }
 
-    grabYearsDiff() {
-        const currentYear = 2020
-        const { userYear } = this.state
-        const yearDiff = currentYear - userYear
-
-        return yearDiff
-    }
-
     grabDaysFromYearDiff(yearDiff) {
         const { daysPerYear } = this.state
         const daysFromYearDiff = yearDiff * daysPerYear
@@ -119,15 +114,38 @@ class App extends React.Component {
     }
 
     grabDaysIntoCurrentYear() {
-    
+        const today = new Date()
+
+        let daysIntoCurrentYear = Math.ceil((today - new Date(today.getFullYear(), 0, 1)) / 86400000)
+        console.log(daysIntoCurrentYear) 
     }
 
     grabDaysIntoBirthYear() {
+        const { userYear } = this.state
+        const { userMonth } = this.state
+        const { userDay } = this.state
 
+        const birthdate = new Date(userMonth + " " + userDay + ", " + userYear)
+
+        // Returns one less (July 2 is the 183rd day, but returns 182 due to being 182 days into the year)
+        let daysSince = Math.ceil((birthdate - new Date(birthdate.getFullYear(), 0, 1)) / 86400000);
+        console.log(daysSince)
     }
 
-    getFinalAmountOfDays() {
+    getFinalAmountOfDays(daysIntoBirthYear, daysIntoCurrentYear, leapYearCount, yearDiff) {
+        /* Need to subtract 2 from yearDiff for birth year and current year,
+        add one to each of the days into so they are equal to the current and birth day*/
 
+        const { daysPerYear } = this.state
+    }
+    
+    grabYearsDiff() {
+        const { currentYear } = this.state
+        const { userYear } = this.state
+
+        const yearDiff = currentYear - userYear
+
+        return yearDiff
     }
 
     render() {
@@ -182,6 +200,7 @@ class App extends React.Component {
                         </tr>
                     </tbody>
                 </table>
+                <button onClick={this.grabDaysIntoCurrentYear}></button>
             </div>
         );
     }
