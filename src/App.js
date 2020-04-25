@@ -1,9 +1,15 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'shards-ui/dist/css/shards.min.css';
-import {
-    FormSelect, FormInput, Alert, Button,
-} from 'shards-react';
+import { FormSelect, FormInput, Alert, Button } from 'shards-react';
+
+function verifyLeapYear(year) {
+    /* In order for the year to be a leap year if must be divisible
+    by 4 and not divisible by 100 unless it is the start of a
+    century in which case it must be divisible by 400 */
+
+    return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
+}
 
 class App extends React.Component {
     constructor(props) {
@@ -14,13 +20,15 @@ class App extends React.Component {
             userDay: 0,
             userYear: 0,
             totalDays: 0,
+            userYearIsLeapYear: false,
             thirtyOneDayMonths: ['January', 'March', 'May', 'July', 'August', 'October', 'December'],
             thirtyDayMonths: ['April', 'June', 'September', 'November'],
             daysAlertVisible: false,
             yearAlertVisible: false,
             totalDaysAlertVisible: false,
         };
-
+        
+        this.componentDidMount = this.componentDidMount.bind(this);
         this.getUserMonth = this.getUserMonth.bind(this);
         this.getUserDay = this.getUserDay.bind(this);
         this.getUserYear = this.getUserYear.bind(this);
@@ -46,9 +54,12 @@ class App extends React.Component {
         const { userMonth } = this.state;
         const { thirtyOneDayMonths } = this.state;
         const { thirtyDayMonths } = this.state;
+        const { userYearIsLeapYear } = this.state;
 
-        if (this.userMonth === 'February') {
-            if (event.target.value > 28) {
+        if (userMonth === 'February') {
+            if (userYearIsLeapYear === false && event.target.value > 28) {
+                this.setState({ daysAlertVisible: true });
+            } else if (userYearIsLeapYear === true && event.target.value > 29) {
                 this.setState({ daysAlertVisible: true });
             } else {
                 this.setState({ userDay: event.target.value });
@@ -77,6 +88,7 @@ class App extends React.Component {
         if (event.target.value.length < 5) {
             this.setState({ userYear: parseInt(event.target.value, 10) });
             this.setState({ yearAlertVisible: false });
+            this.setState({ userYearIsLeapYear: verifyLeapYear(event.target.value) })
         } else {
             this.setState({ yearAlertVisible: true });
         }
@@ -86,8 +98,6 @@ class App extends React.Component {
         const { userYear } = this.state;
         const { userMonth } = this.state;
         const { userDay } = this.state;
-        const { totalDaysAlertVisible } = this.state;
-        const { totalDays } = this.state;
         const today = new Date();
         const birthday = new Date(`${userMonth} ${userDay}, ${userYear}`);
 
@@ -97,6 +107,7 @@ class App extends React.Component {
         this.setState({ totalDaysAlertVisible: true });
         this.setState({ totalDays: total });
     }
+
 
     render() {
         const { userDay } = this.state;
@@ -108,6 +119,10 @@ class App extends React.Component {
 
         return (
             <div>
+                <div>
+                    <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>What Day Were You Born?</h1>
+                    <br />
+                </div>
                 <div>
                     <table style={{ width: '100%' }}>
                         <thead>
@@ -137,11 +152,11 @@ class App extends React.Component {
                                 </td>
 
                                 <td style={{ width: '33%' }}>
-                                    <FormInput id="Day" value={userDay} onChange={this.getUserDay} />
+                                    <FormInput id="Day" value={userDay} type="number" onChange={this.getUserDay} />
                                 </td>
 
                                 <td style={{ width: '33%' }}>
-                                    <FormInput id="Year" value={userYear} onChange={this.getUserYear} />
+                                    <FormInput id="Year" value={userYear} type="number" onChange={this.getUserYear} />
                                 </td>
                             </tr>
                             <tr>
@@ -158,12 +173,12 @@ class App extends React.Component {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <br />
-                    <Button theme="primary" outline onClick={this.getTotalDays}>Find Out How Many Days</Button>
+                    <Button theme="primary" outline onClick={this.getTotalDays}>Find Out How Many Days You Have Been Alive</Button>
                 </div>
                 <div>
                     <br />
-                    <Alert theme="success" open={totalDaysAlertVisible}>
-                        The total days is
+                    <Alert style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} theme="success" open={totalDaysAlertVisible}>
+                        The total amount of days you have been alive is
                         {' '}
                         {totalDays}
                     </Alert>
@@ -172,5 +187,7 @@ class App extends React.Component {
         );
     }
 }
+
+
 
 export default App;
