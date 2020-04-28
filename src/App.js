@@ -1,7 +1,9 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'shards-ui/dist/css/shards.min.css';
-import { FormSelect, FormInput, Alert, Button } from 'shards-react';
+import {
+    FormSelect, FormInput, Alert, Button,
+} from 'shards-react';
 
 function verifyLeapYear(year) {
     /* In order for the year to be a leap year if must be divisible
@@ -17,17 +19,18 @@ class App extends React.Component {
         // Initialize today as a constant date
         this.state = {
             userMonth: '',
-            userDay: 0,
-            userYear: 0,
+            userDay: 1,
+            userYear: 1,
             totalDays: 0,
             userYearIsLeapYear: false,
+            currentYear: new Date().getFullYear(),
             thirtyOneDayMonths: ['January', 'March', 'May', 'July', 'August', 'October', 'December'],
             thirtyDayMonths: ['April', 'June', 'September', 'November'],
             daysAlertVisible: false,
             yearAlertVisible: false,
             totalDaysAlertVisible: false,
         };
-        
+
         this.componentDidMount = this.componentDidMount.bind(this);
         this.getUserMonth = this.getUserMonth.bind(this);
         this.getUserDay = this.getUserDay.bind(this);
@@ -57,38 +60,40 @@ class App extends React.Component {
         const { userYearIsLeapYear } = this.state;
 
         if (userMonth === 'February') {
-            if (userYearIsLeapYear === false && event.target.value > 28) {
+            if (userYearIsLeapYear === false && event.target.value > 29 || event.target.value < 1) {
                 this.setState({ daysAlertVisible: true });
-            } else if (userYearIsLeapYear === true && event.target.value > 29) {
+            } else if (userYearIsLeapYear === true && event.target.value > 30 || event.target.value < 1) {
                 this.setState({ daysAlertVisible: true });
             } else {
-                this.setState({ userDay: event.target.value });
+                this.setState({ userDay: parseInt(event.target.value, 10) });
                 this.setState({ daysAlertVisible: false });
             }
         } else if (thirtyOneDayMonths.find((element) => (element === userMonth))) {
-            if (event.target.value > 31) {
+            if (event.target.value > 32 || event.target.value < 1) {
                 this.setState({ daysAlertVisible: true });
             } else {
-                this.setState({ userDay: event.target.value });
+                this.setState({ userDay: parseInt(event.target.value, 10) });
                 this.setState({ daysAlertVisible: false });
             }
         } else if (thirtyDayMonths.find((element) => (element === userMonth))) {
-            if (event.target.value > 30) {
+            if (event.target.value > 31 || event.target.value < 1) {
                 this.setState({ daysAlertVisible: true });
             } else {
-                this.setState({ userDay: event.target.value });
+                this.setState({ userDay: parseInt(event.target.value, 10) });
                 this.setState({ daysAlertVisible: false });
             }
         } else {
-            this.setState({ userDay: event.target.value });
+            this.setState({ userDay: parseInt(event.target.value, 10) });
         }
     }
 
     getUserYear(event) {
-        if (event.target.value.length < 5) {
+        const { currentYear } = this.state;
+
+        if (event.target.value < currentYear && event.target.value >= 1) {
             this.setState({ userYear: parseInt(event.target.value, 10) });
             this.setState({ yearAlertVisible: false });
-            this.setState({ userYearIsLeapYear: verifyLeapYear(event.target.value) })
+            this.setState({ userYearIsLeapYear: verifyLeapYear(event.target.value) });
         } else {
             this.setState({ yearAlertVisible: true });
         }
@@ -115,7 +120,7 @@ class App extends React.Component {
         const { daysAlertVisible } = this.state;
         const { yearAlertVisible } = this.state;
         const { totalDaysAlertVisible } = this.state;
-        const { totalDays } = this.state
+        const { totalDays } = this.state;
 
         return (
             <div>
@@ -162,10 +167,14 @@ class App extends React.Component {
                             <tr>
                                 <td />
                                 <td>
-                                    <Alert theme="danger" open={daysAlertVisible}>Please choose a valid day for the month</Alert>
+                                    <Alert theme="danger" open={daysAlertVisible}>
+                                        Please choose a valid day for the month. If you were born on
+                                        a leap year please input the year and then the day so that
+                                        we can verify the leap years legitimacy.
+                                    </Alert>
                                 </td>
                                 <td>
-                                    <Alert theme="danger" open={yearAlertVisible}>Please enter in a valid year</Alert>
+                                    <Alert theme="danger" open={yearAlertVisible}>Please enter in a valid year.</Alert>
                                 </td>
                             </tr>
                         </tbody>
@@ -187,7 +196,6 @@ class App extends React.Component {
         );
     }
 }
-
 
 
 export default App;
