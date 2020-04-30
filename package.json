@@ -48,5 +48,8 @@
   "bugs": {
     "url": "https://github.com/Ushrio/years-to-days/issues"
   },
-  "homepage": "https://github.com/Ushrio/years-to-days#readme"
+  "homepage": "https://github.com/Ushrio/years-to-days#readme",
+  "directories": {
+    "test": "test"
+  }
 }

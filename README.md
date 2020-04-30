@@ -18,12 +18,12 @@ of the way there.
 
 1. Clone the repo onto your machine.
 2. From the command line **cd** into the cloned repo.
-3. Run the following command in order to run webpack:
+3. Run the following command in order to install dependencies:
 ```
-npm create
-`````````````````````````````````````````
-4. After webpack has completed run the following command in order to launch the
-web server:
+npm install
+```
+4. After dependency installation has completed run the following command in
+order to launch the web server:
 ```
 npm start
 ```
