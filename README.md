@@ -21,7 +21,7 @@ of the way there.
 3. Run the following command in order to run webpack:
 ```
 npm create
-`````````````````````````````````````````
+```
 4. After webpack has completed run the following command in order to launch the
 web server:
 ```
